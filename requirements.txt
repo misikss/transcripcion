@@ -1,0 +1,7 @@
+dotenv
+pdf2docx
+markdown_pdf
+pypandoc
+streamlit
+moviepy == 1.0.3
+langchain[google-vertexai]
