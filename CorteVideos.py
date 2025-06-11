@@ -2,7 +2,7 @@ import os
 import math
 from dotenv import load_dotenv
 from google.cloud import storage
-from moviepy.editor import VideoFileClip
+from moviepy.editor import VideoFileClip, AudioFileClip
 from AgenteIA import generar_transcripcion
 
 class ProcesadorVideo:
@@ -21,11 +21,19 @@ class ProcesadorVideo:
         return f"gs://{self.bucket_name}/{destination_blob_name}"
 
     def procesar_y_subir(self):
-        video_clip = VideoFileClip(self.base_filename)
-        audio_clip = video_clip.audio
+        file_extension = os.path.splitext(self.base_filename)[1].lower()
+
+        if file_extension in [".mp4", ".avi", ".mov", ".mkv"]:
+            clip = VideoFileClip(self.base_filename)
+            audio_clip = clip.audio
+        elif file_extension == ".mp3":
+            clip = AudioFileClip(self.base_filename)
+            audio_clip = clip
+        else:
+            raise ValueError("Tipo de archivo no soportado. Por favor, sube un video o un archivo MP3.")
 
         duration = audio_clip.duration
-        segment_duration = 1500  # 10 minutos
+        segment_duration = 1500  # 10 minutos (25 minutos en realidad)
         self.num_segments = math.ceil(duration / segment_duration)
 
         for i in range(self.num_segments):
@@ -40,7 +48,7 @@ class ProcesadorVideo:
             gs_uri = self.upload_to_gcs(output_path, destination_blob_name)
             print(f"✅ Segmento {i+1} guardado y subido como: {gs_uri}")
         audio_clip.close()
-        video_clip.close()
+        clip.close()
 
     def send_transcripcion_gemini(self):
         rs_final=generar_transcripcion(self.base_name, self.num_segments)
