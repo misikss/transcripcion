@@ -12,3 +12,4 @@ pydantic>=2.0.0
 python-docx>=0.8.10
 PyMuPDF>=1.19.0
 opencv-python-headless>=4.5
+

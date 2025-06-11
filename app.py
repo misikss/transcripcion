@@ -3,22 +3,13 @@ import base64
 import streamlit as st
 from CorteVideos import ProcesadorVideo
 from Documento_Convertir import CrearDocumentos, vaciar_documento, vaciar_videos_audios
+
 def __main__():
-    
     st.title("Transcripcion de Videos 📼", False)
-    st.write("Esta aplicación permite transcribir videos o audios a texto.")
+    st.write("Esta aplicación permite transcribir videos a texto.")
     st.divider()
     
-    def tipo_archivo(filename):
-        ext = os.path.splitext(filename)[1].lower()
-        if ext in [".mp3", ".wav", ".flac"]:
-            return "audio"
-        elif ext in [".mp4", ".avi", ".mov", ".mkv"]:
-            return "video"
-        else:
-            return "desconocido"
-    
-    # Subir el archivo de video o audio
+    # Subir el archivo de video
     st.header("1. Primero", False)
     vaciar_videos_audios()
     archivo = st.file_uploader("Sube tu video aqui", accept_multiple_files=False, type=["mp4", "avi", "mov", "mkv"])  
@@ -35,16 +26,10 @@ def __main__():
             os.remove(destino)
         os.rename(save_path, destino)
         st.success(f"Archivo guardado en: {destino}")
-        
-        tipo = tipo_archivo(archivo.name)
-        
-        if tipo == "audio":
-            st.audio(destino)
-        else:
-            st.video(destino)
+        st.video(destino)
     st.divider()
     
-    # Transcribir el video o audio
+    # Transcribir el video
     st.header("2. Segundo", False)
     st.write("Genera tu transcripcion aqui ✅.")
     if archivo is not None:
@@ -59,11 +44,6 @@ def __main__():
                             texto = procesador.send_transcripcion_gemini()
                             CrearDocumentos(texto)
                         st.success("Video transcrito con exito! 💪🦁")
-                        # def stream():
-                        #     for word in str(texto).split(" "):
-                        #         yield word + " "
-                        #         time.sleep(0.02)
-                        # st.write_stream(stream)
                         
                     # Mostrar documentos.
                     tab1, tab2, tab3= st.tabs(["📕 PDF", "📘 WORD", "📄 TEXTO"])
@@ -90,5 +70,6 @@ def __main__():
                                 mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                             )
                         tab3.code(texto)
+
 if '__main__' == __name__:
     __main__()
