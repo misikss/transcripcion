@@ -12,21 +12,31 @@ def __main__():
     # Subir el archivo de video
     st.header("1. Primero", False)
     vaciar_videos_audios()
-    archivo = st.file_uploader("Sube tu video aqui", accept_multiple_files=False, type=["mp4", "avi", "mov", "mkv"])  
+    archivo = st.file_uploader("Sube tu video o audio aqui", accept_multiple_files=False, type=["mp4", "avi", "mov", "mkv", "mp3"])  
     if archivo is not None:
         # Especifica la carpeta donde deseas guardar el archivo
         save_folder = "archivos_subidos"
         os.makedirs(save_folder, exist_ok=True)
-        save_path = os.path.join(save_folder, archivo.name)
-        # Guarda el archivo en el disco
-        with open(save_path, "wb") as f:
-            f.write(archivo.getbuffer())
-        destino = "archivos_subidos/video.mp4"
+        
+        # Genera un nombre de archivo dinámico manteniendo la extensión original
+        file_extension = os.path.splitext(archivo.name)[1]
+        destino = os.path.join(save_folder, f"entrada{file_extension}")
+        
+        # Elimina el archivo existente si tiene la misma extensión
         if os.path.exists(destino):
             os.remove(destino)
-        os.rename(save_path, destino)
+        
+        # Guarda el archivo en el disco
+        with open(destino, "wb") as f:
+            f.write(archivo.getbuffer())
+        
         st.success(f"Archivo guardado en: {destino}")
-        st.video(destino)
+        
+        # Muestra el archivo subido (video o audio)
+        if file_extension.lower() in [".mp4", ".avi", ".mov", ".mkv"]:
+            st.video(destino)
+        elif file_extension.lower() == ".mp3":
+            st.audio(destino)
     st.divider()
     
     # Transcribir el video
