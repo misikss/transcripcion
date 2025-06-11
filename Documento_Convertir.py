@@ -26,7 +26,7 @@ def vaciar_documento():
 def CrearDocumentos(texto_md:str):
     with open("Transcripcion.md", "w", encoding="utf-8") as f:
         f.write(texto_md)
-    ("✅ MD generado exitosamente.")
+    print("✅ MD generado exitosamente.")
     
     # Crear una instancia de MarkdownPdf
     pdf = MarkdownPdf(toc_level=2, optimize=True)

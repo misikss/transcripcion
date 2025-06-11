@@ -8,7 +8,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 
 load_dotenv()
 os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
-bukcet_name = os.getenv("BUCKET_NAME")
+bucket_name = os.getenv("BUCKET_NAME")
 location_l = os.getenv("LOCATION")
 project_id = os.getenv("PROJECT_ID")
 
@@ -66,10 +66,10 @@ Transcribe la totalidad del discurso contenido del audio. Para cada hablante:
 
 ### **REGLAS PARA LIMPIEZA Y OPTIMIZACIÓN**
 
-* Elimina repeticiones que no aporten (ej. “hola, hola, hola” → “hola”).
+* Elimina repeticiones que no aporten (ej. "hola, hola, hola" → "hola").
 * Reduce preguntas reiteradas a una sola versión clara.
 * Conserva repeticiones solo si expresan tono emocional o estilo característico del hablante.
-* Elimina muletillas vacías (ej. “eh”, “este”, “um”) excepto si tienen valor expresivo.
+* Elimina muletillas vacías (ej. "eh", "este", "um") excepto si tienen valor expresivo.
 
 ---
 
@@ -140,7 +140,7 @@ def generar_transcripcion(base_filename: str, num_segments: int):
         archivo_input = {
             "type": "image_url",
             "image_url": {
-                "url": f"gs://{bukcet_name}/{base_filename}/{base_filename}_part_{i+1}.mp3"
+                "url": f"gs://{bucket_name}/{base_filename}/{base_filename}_part_{i+1}.mp3"
             },
         }
 
