@@ -3,6 +3,7 @@ import streamlit as st
 from CorteVideos import ProcesadorVideo
 from Documento_Convertir import CrearDocumentos, vaciar_documento, vaciar_videos_audios
 from transcripcion_mp3 import transcribir_audio_mp3, segmentar_por_temas
+import base64
 
 def verificar_credenciales():
     cred_path = os.path.abspath("credenciales.json")
@@ -73,9 +74,9 @@ def main_app():
                         documento_path = "Transcripcion.pdf"
                         with open(documento_path, "rb") as f:
                             base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-                            # Crear un iframe para mostrar el PDF
-                            pdf_mostrar = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf"></iframe>'
-                            tab1.markdown(pdf_mostrar, unsafe_allow_html=True)
+                        # Crear un iframe para mostrar el PDF
+                        pdf_mostrar = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf"></iframe>'
+                        tab1.markdown(pdf_mostrar, unsafe_allow_html=True)
                     
                         with open("Transcripcion.docx", "rb") as file:
                             contenido = file.read()
