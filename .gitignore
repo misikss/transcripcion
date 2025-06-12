@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Streamlit
+.streamlit/secrets.toml
+*.db
+
+# Archivos de subida y salida
+archivos_subidos/
+Transcripcion.*
+Transcripciones/
+*.mp3
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.md
+# Archivos sensibles
+credenciales.json
+
+# Entornos virtuales
+venv/
+env/
+.venv/
+
+# VSCode / IDEs
+.vscode/
+.idea/
+
+# Mac / Linux / Windows
+.DS_Store
+Thumbs.db
