@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env/
+.venv/
+
+# IDEs
+.idea/
+.vscode/
+
+# Archivos temporales
+*.swp
+*.swo
+*~
+
+# No ignorar estos archivos importantes
+!requirements.txt
+!credenciales.json
+!app.py
+!*.py
