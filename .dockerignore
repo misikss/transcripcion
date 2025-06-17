@@ -18,8 +18,16 @@ venv/
 *.swo
 *~
 
+# Archivos de credenciales
+secrets/
+*.json
+.env
+
 # No ignorar estos archivos importantes
 !requirements.txt
-!credenciales.json
+!package.json
 !app.py
 !*.py
+# Asegurarse de excluir específicamente los archivos de credenciales incluso si coinciden con patrones anteriores
+secrets/clave.json
+credenciales.json

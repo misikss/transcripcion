@@ -1,7 +1,19 @@
 from google.cloud import speech_v1p1beta1 as speech
 import os
+import google.auth
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "credenciales.json"  # cambia si está en otra carpeta
+# Intentar usar primero el archivo local de credenciales
+try:
+    if os.path.exists("secrets/clave.json"):
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "secrets/clave.json"
+        credentials = speech.SpeechClient.from_service_account_file("secrets/clave.json")
+    else:
+        # Si no hay archivo local, intentar obtener credenciales automáticas
+        credentials, _ = google.auth.default()
+    print("✅ Credenciales obtenidas correctamente")
+except Exception as e:
+    print(f"❌ No se pudieron obtener credenciales: {str(e)}")
+    raise
 
 def test_google_speech():
     client = speech.SpeechClient()

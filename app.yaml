@@ -1,14 +1,17 @@
 runtime: custom
 env: flex
-entrypoint: streamlit run app.py --server.port=$PORT --server.address=0.0.0.0
+
+entrypoint: streamlit run app.py --server.port=8080 --server.address=0.0.0.0
 
 resources:
   cpu: 1
   memory_gb: 1
   disk_size_gb: 10
 
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 3
+
 env_variables:
   BUCKET_NAME: "videos_y_audios"
-
-runtime_config:
-  python_version: 3.10
+  GOOGLE_CLOUD_PROJECT: "virtual-ellipse-460616-f3"

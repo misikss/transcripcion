@@ -1,6 +1,7 @@
 import os
 import io
 import ast
+import google.auth
 from google.cloud import speech_v1p1beta1 as speech
 from google.cloud import storage
 from google.oauth2 import service_account
@@ -21,12 +22,18 @@ def transcribir_audio_mp3(ruta_mp3):
     y devuelve el texto y los timestamps. Si el audio es muy largo, lo sube a GCS y usa la URI.
     """
     load_dotenv()
-    cred_path = os.path.abspath("credenciales.json")
-    if not os.path.isfile(cred_path):
-        raise FileNotFoundError(f"❌ No se encontró el archivo de credenciales en {cred_path}")
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = cred_path
+      # Primero intentar usar el archivo local de credenciales
+    if os.path.exists("secrets/clave.json"):
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "secrets/clave.json"
+        credentials = service_account.Credentials.from_service_account_file("secrets/clave.json")
+    else:
+        # Si no hay archivo local, intentar obtener credenciales automáticas
+        try:
+            credentials, _ = google.auth.default()
+        except Exception as e:
+            raise RuntimeError(f"❌ No se pudieron obtener credenciales: {str(e)}")
+    
     try:
-        credentials = service_account.Credentials.from_service_account_file(cred_path)
         client = speech.SpeechClient(credentials=credentials)
         storage_client = storage.Client(credentials=credentials)
     except Exception as e:

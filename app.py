@@ -1,23 +1,32 @@
 import os
 import streamlit as st
+import google.auth
 from CorteVideos import ProcesadorVideo
 from Documento_Convertir import CrearDocumentos, vaciar_documento, vaciar_videos_audios
 from transcripcion_mp3 import transcribir_audio_mp3, segmentar_por_temas
 import base64
 
 def verificar_credenciales():
-    cred_path = os.path.abspath("credenciales.json")
-    if not os.path.exists(cred_path):
-        st.error(f"❌ No se encontró el archivo de credenciales en: {cred_path}")
-        st.stop()
-
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = cred_path
-
-    if not os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") or not os.path.exists(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]):
-        st.error("❌ No se pudo establecer la variable de entorno GOOGLE_APPLICATION_CREDENTIALS correctamente.")
-        st.stop()
+    # Primero intentar usar el archivo local de credenciales
+    if os.path.exists("secrets/clave.json"):
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "secrets/clave.json"
+        st.success("✅ Usando credenciales locales desde clave.json")
+        return
     
-    st.success("✅ Credenciales encontradas y variable de entorno establecida correctamente.")
+    # Si no hay archivo local, intentar obtener credenciales automáticas (App Engine)
+    try:
+        import google.auth
+        credentials, project_id = google.auth.default()
+        st.success(f"✅ Usando credenciales de App Engine (proyecto: {project_id})")
+        return  # Si obtenemos las credenciales de App Engine, continuamos
+    except Exception as e:
+        st.error("❌ No se encontraron credenciales locales ni de App Engine")
+        st.error(str(e))
+        st.stop()
+        
+    # Solo llegamos aquí si no hay credenciales locales ni de App Engine
+    st.error("❌ No se encontró ninguna credencial válida")
+    st.stop()
 def main_app():
     st.title("Transcripción de Audios MP3 🎵", False)
     st.write("Esta aplicación permite transcribir archivos .mp3 a texto y segmentar por temas.")
