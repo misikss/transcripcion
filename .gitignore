@@ -8,6 +8,21 @@ build/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Credenciales y secretos
+secrets/
+secrets/clave.json
+*.json.key
+**/credentials.json
+**/*credentials*.json
+.env
+
+# Archivos locales
+archivos_subidos/
+uploads/
+*.mp3
+*.mp4
+*.wav
 *.db
 
 # Archivos de subida y salida
